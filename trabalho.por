@@ -7,9 +7,6 @@ programa {
      * NOTAS (RECEITA E LUCRO DO DIA)
      * - Terminar opção 7 (Função mostrarReceitaELucroDoDia() + obterReceitaELucroDoDia())
      * 
-     * NOTAS (CIRCUITO):
-     * - Terminar opção 8 (Função mostrarLocarCircuito() + locarCircuito(inteiro circuitoId))
-     * 
      */
 
     inclua biblioteca Util --> u
@@ -142,13 +139,21 @@ programa {
      * Funções do Circuito
      */
 
+    funcao vazio iniciarDadosDoCircuito(inteiro valorLocacao[]) {
+        para (inteiro i = 0; i < MAX_CIRCUITOS; i++) {
+            circuitosLocado[i] = 0
+            circuitosLucro[i] = 0
+            circuitosValorLocacao[i] = valorLocacao[i]
+        }
+    }
+
     funcao inteiro locarCircuito(inteiro circuitoId) {
         se (nao (circuitoId >= 0 e circuitoId < MAX_CIRCUITOS)) {
             // ERRO: A função `locarCircuito` retornará `1` se caso o valor passado no parâmetro `circuitoId` NÃO for >= 0 e < MAX_CIRCUITOS (entre 0 e MAX_CIRCUITOS - 1).
             retorne 1
         }
 
-        se (circuitosLocado[circuitoId]) {
+        se (circuitosLocado[circuitoId] == 1) {
             // ERRO: A função `locarCircuito` retornará `2` se caso o circuito ESTIVER locado.
             retorne 2
         }
@@ -310,6 +315,8 @@ programa {
                         escreva("KART LOCADO COM SUCESSO!\n")
                         escreva("\nModelo: ", kartsModelo[kartIdEscolhido])
                         escreva("\nValor de Locação: R$ ", m.arredondar(kartsValorLocacao[kartIdEscolhido], 2))
+
+                        kartsLocado[kartIdEscolhido] = 1
                     }
                 }
             }
@@ -352,6 +359,67 @@ programa {
         // ...
     }
 
+    funcao vazio mostrarLocarCircuito() {
+        inteiro circuitoIdEscolhido, disponivelContador = 0, respostaLocarCircuito = 0
+
+        faca {
+            limpa()
+
+            escreva("# ALUGAR CIRCUITO:\n\n")
+
+            para (inteiro i = 0; i < MAX_CIRCUITOS; i++) {
+                se (circuitosLocado[i] == 0) {
+                    escreva("[", i+1, "] - Circuito ", i + 1, " (R$ ", m.arredondar(circuitosValorLocacao[i], 2), ")\n")
+                    disponivelContador++
+                }
+            }
+
+            se (disponivelContador == 0) {
+                escreva("Não há nenhum circuito disponível.")
+
+                respostaLocarCircuito = 0
+            } senao {
+                escreva("[0] - Retornar\n\nR: ")
+
+                // Ler um ID de circuito para locar (0) para retornar
+                leia(circuitoIdEscolhido)
+
+                se (circuitoIdEscolhido == 0) {
+                    limpa()
+
+                    escreva("# ALUGAR CIRCUITO:\n\n")
+                    escreva("Você decidiu retornar ao menu principal.")
+
+                    // Como o código está dentro de um `faca-enquanto` precisamos definir `respostaLocarCircuito` para `0` e pará-lo.
+                    respostaLocarCircuito = 0
+                } senao {
+                    // Como os índices dos vetores começam do `0` e vai até `max - 1`, então precisamos subtrair `1` de `circuitoIdEscolhido`.
+                    // Porque na escolha de locação de um circuito, os IDs começam do `1` e não no `0`, o número (0) serve para retornar.
+                    circuitoIdEscolhido--
+
+                    // Salvar a resposta da função `locarCircuito` na variável `respostaLocarCircuito`.
+                    respostaLocarCircuito = locarCircuito(circuitoIdEscolhido)
+
+                    // Como comentado os possíveis erros na função `locarCircuito`, apenas o `retorne 0` passa pelos retornos de erros (Sucesso).
+                    se (respostaLocarCircuito == 0) {
+                        limpa()
+
+                        escreva("# CIRCUITO LOCADO!\n")
+                        escreva("\nCircuito: ", circuitoIdEscolhido + 1)
+                        escreva("\nValor de Locação: R$ ", m.arredondar(circuitosValorLocacao[circuitoIdEscolhido], 2))
+
+                        circuitosLocado[circuitoIdEscolhido] = 1
+                    }
+                }
+            }
+        } enquanto (respostaLocarCircuito != 0)
+
+        caracter pausar
+
+        escreva("\n\nPressione qualquer caracter para retornar ao menu principal.\nR: ")
+        leia(pausar)
+    }
+
     funcao vazio mostrarAtualizarDia() {
         real lucro = obterReceitaELucroDoDia()
 
@@ -388,6 +456,10 @@ programa {
 
     funcao inicio() {
         inteiro opcao
+
+        // Iniciar valores e variáveis no `0` para os circuitos:
+        inteiro valorLocacao[] = {500, 500, 500}
+        iniciarDadosDoCircuito(valorLocacao)
 
         faca {
             limpa()
