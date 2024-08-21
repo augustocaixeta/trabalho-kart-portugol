@@ -1,11 +1,8 @@
 programa {
     /**
-     * NOTAS (KARTS):
-     * - Terminar opção 3 (Função mostrarKartsLocados())
-     * - Terminar opção 4 (Função mostrarDevolverKart() + devolverKart(inteiro kartId))
+     * NOTAS
      * 
-     * NOTAS (RECEITA E LUCRO DO DIA)
-     * - Terminar opção 7 (Função mostrarReceitaELucroDoDia() + obterReceitaELucroDoDia())
+     * ~
      * 
      */
 
@@ -85,10 +82,11 @@ programa {
         }
 
         kartsLocado[kartId] = 1
-        kartsLucro[kartId] = kartsLucro[kartId] + kartsValorLocacao[kartId]
+        kartsLucro[kartId] += kartsValorLocacao[kartId]
+        kartsVezesLocado[kartId]++
 
-        // Receita do dia (receitaDoDia += kartsValorLocacao[kartId])
-        receitaDoDia = receitaDoDia + kartsValorLocacao[kartId]
+        // Receita do dia
+        receitaDoDia += kartsValorLocacao[kartId]
 
         retorne 0
     }
@@ -111,8 +109,8 @@ programa {
 
         kartsLocado[kartId] = 0
 
-        // Receita do dia (receitaDoDia -= kartsValorLocacao[kartId])
-        receitaDoDia = receitaDoDia - kartsValorLocacao[kartId]
+        // Receita do dia
+        receitaDoDia -= kartsValorLocacao[kartId]
 
         retorne 0
     }
@@ -161,10 +159,10 @@ programa {
         real valorLocacaoComAcrescimo = circuitosValorLocacao[circuitoId] * 1.70
 
         circuitosLocado[circuitoId] = 1
-        circuitosLucro = circuitosLucro + valorLocacaoComAcrescimo
+        circuitosLucro += valorLocacaoComAcrescimo
 
-        // Receita do dia (receitaDoDia += valorLocacaoComAcrescimo)
-        receitaDoDia = receitaDoDia + valorLocacaoComAcrescimo
+        // Receita do dia
+        receitaDoDia += valorLocacaoComAcrescimo
 
         retorne 0
     }
@@ -173,13 +171,13 @@ programa {
      * Funções do dia
      */
 
-    funcao real obterReceitaELucroDoDia() {
+    funcao real obterLucroDoDia() {
         lucroDoDia = receitaDoDia * 0.30
 
         retorne lucroDoDia
     }
 
-    funcao vazio atualizarDia(inteiro &kartsLocados[], inteiro &locadoContador) {
+    funcao vazio atualizarDia(inteiro kartsLocados[], inteiro locadoContador) {
         // kartsLocados & locadoContador -> São parâmetros de referência
         // Pode perceber que os parâmetros passados por referência sempre estarão RECEBENDO um valor (Variável Receptora) (ex.: variavelReceptora = valor)
 
@@ -263,35 +261,53 @@ programa {
     }
 
     funcao vazio mostrarKartsLocados() {
-        // ...
+        limpa()
+
+        inteiro locadoContador = 0
+
+        escreva("# KARTS LOCADOS:\n\n")
+
+        para (inteiro i = 0; i < MAX_KARTS; i++) {
+            se (kartsCadastrado[i] == 1 e kartsLocado[i] == 1) {
+                escreva("Nº ", i, " | MODELO: ", kartsModelo[i], " | ALUGUEL: R$ ", m.arredondar(kartsValorLocacao[i], 2), "\n")
+                locadoContador++
+            }
+        }
+
+        se (locadoContador == 0) {
+            escreva("Não há nenhum kart locado.\n")
+        }
+
+        caracter pausar
+
+        escreva("\nPressione qualquer caracter para retornar ao menu principal.\nR: ")
+        leia(pausar)
     }
 
     funcao vazio mostrarLocarKart() {
         limpa()
 
-        inteiro kartIdEscolhido, disponivelContador = 0, respostaLocarKart = 0
+        inteiro kartIdEscolhido, respostaLocarKart = 0, i = 0
 
         faca {
             limpa()
 
             escreva("# LOCAR UM KART:\n\n")
 
-            para (inteiro i = 0; i < kartContador; i++) {
-                se (kartsCadastrado[i] == 1 e kartsLocado[i] == 0) {
-                    escreva("[", i + 1, "] - MODELO: ", kartsModelo[i], " (R$ ", m.arredondar(kartsValorLocacao[i], 2), ")\n")
-                    disponivelContador++
+            para (i = 0; i < kartContador; i++) {
+                se (kartsCadastrado[i] == 1) {
+                    se (kartsLocado[i] == 0) {
+                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", m.arredondar(kartsValorLocacao[i], 2), ")\n")
+                    } senao {
+                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", m.arredondar(kartsValorLocacao[i], 2), ") (LOCADO)\n")
+                    }
                 }
             }
 
-            se (disponivelContador == 0) {
-                escreva("Não há nenhum kart disponível.")
+            escreva("[0] - Retornar\n\nR: ")
+            leia(kartIdEscolhido)
 
-                // Já que não há nenum kart disponível, a variável `respostaLocarKart` precisa ser `0` para sair do `faca-enquanto`.
-                respostaLocarKart = 0
-            } senao {
-                escreva("\nEscolha um kart para locar ou (0) para retornar\nR: ")
-                leia(kartIdEscolhido)
-
+            se (kartIdEscolhido >= 0 e kartIdEscolhido <= MAX_KARTS) {
                 se (kartIdEscolhido == 0) {
                     limpa()
 
@@ -315,8 +331,6 @@ programa {
                         escreva("KART LOCADO COM SUCESSO!\n")
                         escreva("\nModelo: ", kartsModelo[kartIdEscolhido])
                         escreva("\nValor de Locação: R$ ", m.arredondar(kartsValorLocacao[kartIdEscolhido], 2))
-
-                        kartsLocado[kartIdEscolhido] = 1
                     }
                 }
             }
@@ -329,7 +343,61 @@ programa {
     }
 
     funcao vazio mostrarDevolverKart() {
-        // ...
+        limpa()
+
+        inteiro kartIdEscolhido, respostaDevolverKart = 0, i = 0
+
+        faca {
+          limpa()
+
+            escreva("# DEVOLUÇÃO DE KART:\n\n")
+
+            para (i = 0; i < kartContador; i++) {
+                se (kartsCadastrado[i] == 1) {
+                    se (kartsLocado[i] == 0) {
+                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", m.arredondar(kartsValorLocacao[i], 2), ")\n")
+                    } senao {
+                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", m.arredondar(kartsValorLocacao[i], 2), ") (LOCADO)\n")
+                    }
+                }
+            }
+
+            escreva("[0] - Retornar\n\nR: ")
+            leia(kartIdEscolhido)
+
+            se (kartIdEscolhido >= 0 e kartIdEscolhido <= MAX_KARTS) {
+                se (kartIdEscolhido == 0) {
+                    limpa()
+
+                    escreva("# DEVOLUÇÃO DE KART:\n\n")
+                    escreva("Você decidiu retornar ao menu principal.")
+
+                    // Caso a resposta for `0` (Retornar), a variável `respostaDevolverKart` precisa ser `0` para sair do `faca-enquanto`.
+                    respostaDevolverKart = 0
+                } senao {
+                    // Como os índices dos vetores começam do `0` e vai até `max - 1`, então precisamos subtrair `1` de `kartIdEscolhido`.
+                    // Porque na escolha de devolução de um kart, os IDs começam do `1` e não no `0`, o número (0) serve para retornar.
+                    kartIdEscolhido--
+
+                    // Locando um kart pelo ID escolhido
+                    respostaDevolverKart = devolverKart(kartIdEscolhido)
+
+                    // Caso o retorno de `devolverKart` for `0` é porque o kart foi locado com sucesso.
+                    se (respostaDevolverKart == 0) {
+                        limpa()
+
+                        escreva("KART DEVOLVIDO COM SUCESSO!\n")
+                        escreva("\nModelo: ", kartsModelo[kartIdEscolhido])
+                        escreva("\nValor de Locação: R$ ", m.arredondar(kartsValorLocacao[kartIdEscolhido], 2))
+                    }
+                }
+            }
+        } enquanto (respostaDevolverKart != 0)
+
+        caracter pausar
+
+        escreva("\n\nPressione qualquer caracter para retornar ao menu principal.\nR: ")
+        leia(pausar)
     }
 
     funcao vazio mostrarKartMaisLucrativo() {
@@ -356,41 +424,47 @@ programa {
     }
 
     funcao vazio mostrarReceitaELucroDoDia() {
-        // ...
+        limpa()
+
+        inteiro lucro = obterLucroDoDia()
+
+        escreva("# LUCRO E RECEITA DO DIA:\n")
+
+        escreva("\nLucro: R$ ", m.arredondar(lucro, 2))
+        escreva("\nReceita: R$ ", m.arredondar(receitaDoDia, 2))
+
+        caracter pausar
+
+        escreva("\n\nPressione qualquer caracter para retornar ao menu principal.\nR: ")
+        leia(pausar)
     }
 
     funcao vazio mostrarLocarCircuito() {
-        inteiro circuitoIdEscolhido, disponivelContador = 0, respostaLocarCircuito = 0
+        inteiro circuitoIdEscolhido, respostaLocarCircuito = 0, i = 0
 
         faca {
             limpa()
 
             escreva("# ALUGAR CIRCUITO:\n\n")
 
-            para (inteiro i = 0; i < MAX_CIRCUITOS; i++) {
+            para (i = 0; i < MAX_CIRCUITOS; i++) {
                 se (circuitosLocado[i] == 0) {
-                    escreva("[", i+1, "] - Circuito ", i + 1, " (R$ ", m.arredondar(circuitosValorLocacao[i], 2), ")\n")
-                    disponivelContador++
+                    escreva("[", i+1, "] - Circuito ", i+1, "\n")
+                } senao {
+                    escreva("[", i+1, "] - Circuito ", i+1, " (LOCADO)\n")
                 }
             }
 
-            se (disponivelContador == 0) {
-                escreva("Não há nenhum circuito disponível.")
+            escreva("[0] - Retornar\n\nR: ")
+            leia(circuitoIdEscolhido)
 
-                respostaLocarCircuito = 0
-            } senao {
-                escreva("[0] - Retornar\n\nR: ")
-
-                // Ler um ID de circuito para locar (0) para retornar
-                leia(circuitoIdEscolhido)
-
+            se (circuitoIdEscolhido >= 0 e circuitoIdEscolhido <= MAX_CIRCUITOS) {
                 se (circuitoIdEscolhido == 0) {
                     limpa()
 
                     escreva("# ALUGAR CIRCUITO:\n\n")
                     escreva("Você decidiu retornar ao menu principal.")
 
-                    // Como o código está dentro de um `faca-enquanto` precisamos definir `respostaLocarCircuito` para `0` e pará-lo.
                     respostaLocarCircuito = 0
                 } senao {
                     // Como os índices dos vetores começam do `0` e vai até `max - 1`, então precisamos subtrair `1` de `circuitoIdEscolhido`.
@@ -404,8 +478,8 @@ programa {
                     se (respostaLocarCircuito == 0) {
                         limpa()
 
-                        escreva("# CIRCUITO LOCADO!\n")
-                        escreva("\nCircuito: ", circuitoIdEscolhido + 1)
+                        escreva("# CIRCUITO ALUGADO!\n")
+                        escreva("\nCircuito ID: ", circuitoIdEscolhido + 1)
                         escreva("\nValor de Locação: R$ ", m.arredondar(circuitosValorLocacao[circuitoIdEscolhido], 2))
 
                         circuitosLocado[circuitoIdEscolhido] = 1
@@ -413,7 +487,7 @@ programa {
                 }
             }
         } enquanto (respostaLocarCircuito != 0)
-
+        
         caracter pausar
 
         escreva("\n\nPressione qualquer caracter para retornar ao menu principal.\nR: ")
@@ -421,7 +495,7 @@ programa {
     }
 
     funcao vazio mostrarAtualizarDia() {
-        real lucro = obterReceitaELucroDoDia()
+        real lucro = obterLucroDoDia()
 
         limpa()
 
