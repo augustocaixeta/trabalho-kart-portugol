@@ -1,14 +1,15 @@
 programa {
     /**
      * NOTAS (KARTS):
+     * - Terminar opção 3 (Função mostrarKartsLocados())
+     * - Terminar opção 4 (Função mostrarDevolverKart() + devolverKart(inteiro kartId))
      * 
-     * A variável `kartsVezesLocado` deverá ser usada na opção 4 (Alocar um Kart).
-     * A variável `kartsLucro` deverá ser usada na opção 4 e 5 (Alocar um Kart/Devolver um Kart).
+     * NOTAS (RECEITA E LUCRO DO DIA)
+     * - Terminar opção 7 (Função mostrarReceitaELucroDoDia() + obterReceitaELucroDoDia())
      * 
      * NOTAS (CIRCUITO):
+     * - Terminar opção 8 (Função mostrarLocarCircuito() + locarCircuito(inteiro circuitoId))
      * 
-     * A opção 8 (Locação de circuito) deve usar a variável `circuitoValor` e deixar `circuitosLocado[indiceDoCircuito] = 1`.
-     * A opção 9 (Atualizar o dia) deve usar a variável `circuitosLocado[indiceDoCircuito] = 0`.
      */
 
     inclua biblioteca Util --> u
@@ -167,7 +168,7 @@ programa {
      * Funções do dia
      */
 
-    funcao real obterReceitaLucroDoDia() {
+    funcao real obterReceitaELucroDoDia() {
         lucroDoDia = receitaDoDia * 0.30
 
         retorne lucroDoDia
@@ -256,6 +257,10 @@ programa {
         leia(pausar)
     }
 
+    funcao vazio mostrarKartsLocados() {
+        // ...
+    }
+
     funcao vazio mostrarLocarKart() {
         limpa()
 
@@ -316,6 +321,10 @@ programa {
         leia(pausar)
     }
 
+    funcao vazio mostrarDevolverKart() {
+        // ...
+    }
+
     funcao vazio mostrarKartMaisLucrativo() {
         inteiro kartId = obterKartMaisLucrativo()
 
@@ -339,13 +348,17 @@ programa {
         leia(pausar)
     }
 
-    funcao vazio mostrarLucroDoDia() {
-        real lucro = obterReceitaLucroDoDia()
+    funcao vazio mostrarReceitaELucroDoDia() {
+        // ...
+    }
+
+    funcao vazio mostrarAtualizarDia() {
+        real lucro = obterReceitaELucroDoDia()
 
         limpa()
 
-        escreva("# LUCRO DO DIA:\n\n")
-        escreva("R$ ", m.arredondar(lucro, 2), "\n\n")
+        escreva("# DIA ATUALIZADO!\n\n")
+        escreva("Lucros (R$ ", m.arredondar(lucro, 2), ")\n\n")
 
         inteiro kartsLocados[MAX_KARTS], locadoContador = 0
 
@@ -405,6 +418,7 @@ programa {
                 }
 
                 caso 3: {
+                    mostrarKartsLocados()
                     pare
                 }
 
@@ -424,12 +438,17 @@ programa {
                 }
 
                 caso 7: {
+                    mostrarReceitaELucroDoDia()
+                    pare
+                }
+
+                caso 8: {
                     mostrarLocarCircuito()
                     pare
                 }
 
                 caso 9: {
-                    mostrarLucroDoDia()
+                    mostrarAtualizarDia()
                     pare
                 }
             }
