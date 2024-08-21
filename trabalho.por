@@ -107,6 +107,53 @@ programa {
         leia(pausar)
     }
 
+    funcao alugarKart(){
+
+      inteiro numeroKart
+      cadeia nome[3]
+
+      para(inteiro i = 0; i<3; i++){
+      escreva("Digite o seu nome: ")
+      leia(nome[i])
+      }
+
+      limpa()
+
+      escreva("Estes são os Karts disponíveis: \n")
+      mostrarKartsDisponiveis()
+
+      escreva("Informe o número do Kart que deseja alugar: ")
+      leia(numeroKart)
+      
+  }
+
+    funcao locacaoCircuito(){
+
+      inteiro opcaoCircuito, circuito[3]
+      
+      faca{
+      escreva("# Alugar Circuitos \n")
+
+      escreva("Circuitos disponíveis: \n")
+      escreva("1- Circuito 1 \n")
+      escreva("2- Circuito 2 \n")
+      escreva("3 -Circuito 3 \n")
+
+      leia(opcaoCircuito)
+
+     circuitoAlocado[opcaoCircuito] = 1
+
+     para(inteiro i = 1; i <= 3; i++){
+      se( circuitoAlocado[opcaoCircuito] == 1){
+        escreva("Circuito Já foi alugado! Tente outro \n")
+      }
+     }
+
+    }enquanto((nao (opcaoCircuito >= 0 e opcaoCircuito< 3)))
+    }
+}
+
+
     funcao vazio atualizarDiaAtual() {
         // O faça enquanto abaixo será para o usuário colocar um dia do mês entre 1 e 30.
         // O código sempre repetirá se caso o dia inserido NÃO for >= 1 e <= 30.
