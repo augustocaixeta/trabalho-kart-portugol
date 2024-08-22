@@ -7,7 +7,6 @@ programa {
      */
 
     inclua biblioteca Util --> u
-    inclua biblioteca Matematica --> m
 
     /**
      * Cabeçalho
@@ -85,7 +84,7 @@ programa {
         kartsLucro[kartId] += kartsValorLocacao[kartId]
         kartsVezesLocado[kartId]++
 
-        // Receita do dia
+        // Receita do dia (a `receitaDoDia` aqui não atualiza na variável por algum motivo)
         receitaDoDia += kartsValorLocacao[kartId]
 
         retorne 0
@@ -245,7 +244,7 @@ programa {
 
         para (inteiro i = 0; i < kartContador; i++) {
             se (kartsCadastrado[i] == 1 e kartsLocado[i] == 0) {
-                escreva("Nº ", i, " | MODELO: ", kartsModelo[i], " | ALUGUEL: R$ ", m.arredondar(kartsValorLocacao[i], 2), "\n")
+                escreva("Nº ", i, " | MODELO: ", kartsModelo[i], " | ALUGUEL: R$ ", kartsValorLocacao[i], "\n")
                 disponivelContador++
             }
         }
@@ -269,7 +268,7 @@ programa {
 
         para (inteiro i = 0; i < MAX_KARTS; i++) {
             se (kartsCadastrado[i] == 1 e kartsLocado[i] == 1) {
-                escreva("Nº ", i, " | MODELO: ", kartsModelo[i], " | ALUGUEL: R$ ", m.arredondar(kartsValorLocacao[i], 2), "\n")
+                escreva("Nº ", i, " | MODELO: ", kartsModelo[i], " | ALUGUEL: R$ ", kartsValorLocacao[i], "\n")
                 locadoContador++
             }
         }
@@ -297,9 +296,9 @@ programa {
             para (i = 0; i < kartContador; i++) {
                 se (kartsCadastrado[i] == 1) {
                     se (kartsLocado[i] == 0) {
-                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", m.arredondar(kartsValorLocacao[i], 2), ")\n")
+                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", kartsValorLocacao[i], ")\n")
                     } senao {
-                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", m.arredondar(kartsValorLocacao[i], 2), ") (LOCADO)\n")
+                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", kartsValorLocacao[i], ") (LOCADO)\n")
                     }
                 }
             }
@@ -330,7 +329,7 @@ programa {
 
                         escreva("KART LOCADO COM SUCESSO!\n")
                         escreva("\nModelo: ", kartsModelo[kartIdEscolhido])
-                        escreva("\nValor de Locação: R$ ", m.arredondar(kartsValorLocacao[kartIdEscolhido], 2))
+                        escreva("\nValor de Locação: R$ ", kartsValorLocacao[kartIdEscolhido])
                     }
                 }
             }
@@ -355,9 +354,9 @@ programa {
             para (i = 0; i < kartContador; i++) {
                 se (kartsCadastrado[i] == 1) {
                     se (kartsLocado[i] == 0) {
-                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", m.arredondar(kartsValorLocacao[i], 2), ")\n")
+                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", kartsValorLocacao[i], ")\n")
                     } senao {
-                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", m.arredondar(kartsValorLocacao[i], 2), ") (LOCADO)\n")
+                        escreva("[", i+1, "] - MODELO: ", kartsModelo[i], " (R$ ", kartsValorLocacao[i], ") (LOCADO)\n")
                     }
                 }
             }
@@ -388,7 +387,7 @@ programa {
 
                         escreva("KART DEVOLVIDO COM SUCESSO!\n")
                         escreva("\nModelo: ", kartsModelo[kartIdEscolhido])
-                        escreva("\nValor de Locação: R$ ", m.arredondar(kartsValorLocacao[kartIdEscolhido], 2))
+                        escreva("\nValor de Locação: R$ ", kartsValorLocacao[kartIdEscolhido])
                     }
                 }
             }
@@ -411,8 +410,9 @@ programa {
         // se concluir que há pelo menos (1) kart com maior ganho como nos comentários da função `obterKartMaisLucrativo()`.
         se (kartId != -1) {
             escreva("\nModelo: ", kartsModelo[kartId])
-            escreva("\nValor de aluguel: R$ ", m.arredondar(kartsValorLocacao[kartId], 2))
+            escreva("\nValor de aluguel: R$ ", kartsValorLocacao[kartId])
             escreva("\nVezes locado: ", kartsVezesLocado[kartId])
+            escreva("\nLucro: ", kartsLucro[kartId])
         } senao {
             escreva("\nNão foi encontado nenhum kart com maior ganho.\n")
         }
@@ -426,12 +426,12 @@ programa {
     funcao vazio mostrarReceitaELucroDoDia() {
         limpa()
 
-        inteiro lucro = obterLucroDoDia()
+        real lucro = obterLucroDoDia()
 
         escreva("# LUCRO E RECEITA DO DIA:\n")
 
-        escreva("\nLucro: R$ ", m.arredondar(lucro, 2))
-        escreva("\nReceita: R$ ", m.arredondar(receitaDoDia, 2))
+        escreva("\nLucro: R$ ", lucro)
+        escreva("\nReceita: R$ ", receitaDoDia)
 
         caracter pausar
 
@@ -480,7 +480,7 @@ programa {
 
                         escreva("# CIRCUITO ALUGADO!\n")
                         escreva("\nCircuito ID: ", circuitoIdEscolhido + 1)
-                        escreva("\nValor de Locação: R$ ", m.arredondar(circuitosValorLocacao[circuitoIdEscolhido], 2))
+                        escreva("\nValor de Locação: R$ ", circuitosValorLocacao[circuitoIdEscolhido])
 
                         circuitosLocado[circuitoIdEscolhido] = 1
                     }
@@ -500,7 +500,7 @@ programa {
         limpa()
 
         escreva("# DIA ATUALIZADO!\n\n")
-        escreva("Lucros (R$ ", m.arredondar(lucro, 2), ")\n\n")
+        escreva("Lucros (R$ ", lucro, ")\n\n")
 
         inteiro kartsLocados[MAX_KARTS], locadoContador = 0
 
