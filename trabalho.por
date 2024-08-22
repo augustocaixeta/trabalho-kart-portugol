@@ -13,7 +13,7 @@ programa {
      */
 
     inteiro
-        MAX_KARTS = 3, // Números máximo de karts
+        MAX_KARTS = 15, // Números máximo de karts
         MAX_CIRCUITOS = 3 // Número máximo de circuitos (pistas)
 
     // Kart
